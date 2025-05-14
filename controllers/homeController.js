@@ -1,15 +1,18 @@
+const Product = require("../models/Product");
+const Cart = require("../models/Cart");
 const { MENU_LINKS } = require("../constants/navigation");
 
-const cartController = require("./cartController");
-
-exports.getHomeView = (request, response) => {
-  const cartCount = cartController.getProductsCount();
-
-  response.render("home.ejs", {
+const getHomeView = async (req, res) => {
+  const products = await Product.getAll();
+  const cartCount = await Cart.getProductsQuantity();
+  res.render("home", {
     headTitle: "Shop - Home",
     path: "/",
-    activeLinkPath: "/",
     menuLinks: MENU_LINKS,
+    activeLinkPath: "/",
+    products,
     cartCount,
   });
 };
+
+module.exports = { getHomeView };

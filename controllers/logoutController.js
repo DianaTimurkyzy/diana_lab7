@@ -1,21 +1,22 @@
-const { LOGOUT_LINKS } = require("../constants/navigation");
+const { MENU_LINKS } = require("../constants/navigation");
+const Cart = require("../models/Cart");
 const logger = require("../utils/logger");
 
-const cartController = require("./cartController");
-
-exports.getLogoutView = (request, response) => {
-  const cartCount = cartController.getProductsCount();
-
-  response.render("logout.ejs", {
+const getLogoutView = (req, res) => {
+  const cartCount = Cart.getProductsQuantity();
+  res.render("logout", {
     headTitle: "Shop - Logout",
     path: "/logout",
+    menuLinks: MENU_LINKS,
     activeLinkPath: "/logout",
-    menuLinks: LOGOUT_LINKS,
     cartCount,
   });
 };
 
-exports.killApplication = (request, response) => {
+const killApplication = (req, res) => {
   logger.getProcessLog();
-  process.exit();
+  res.send("Server terminated");
+  process.exit(0);
 };
+
+module.exports = { getLogoutView, killApplication };
